@@ -5,8 +5,21 @@ import {
   SearchIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/outline";
+import { signInWithPopup, signOut } from "firebase/auth";
+import { auth, provider } from "firebaseBackend";
+import useAuth from "hooks/useAuth";
 
 function Header() {
+  const { currentUser } = useAuth();
+
+  const handleSignIn = () => {
+    signInWithPopup(auth, provider).catch(err => alert(err.message));
+  };
+
+  const handleSignOut = () => {
+    signOut(auth).catch(err => alert(err.message));
+  };
+
   return (
     <header>
       {/* top nav */}
@@ -33,8 +46,13 @@ function Header() {
 
         {/* right */}
         <div className="text-white flex items-center text-xs space-x-6 mx-6 whitespace-nowrap">
-          <div className="link">
-            <p>Hello Desmond Oben</p>
+          <div
+            onClick={!currentUser ? handleSignIn : handleSignOut}
+            className="link"
+          >
+            <p>
+              {currentUser ? `Hello, ${currentUser.displayName}` : "Sign In"}
+            </p>
             <p className="font-extrabold md:text-sm">Account & Lists</p>
           </div>
           <div className="link">

@@ -1,3 +1,4 @@
+import axios from "axios";
 import CheckoutProduct from "components/CheckoutProduct";
 import Layout from "components/Layout";
 import useAuth from "hooks/useAuth";
@@ -5,12 +6,32 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { selectTotal } from "slices/basketSlice";
 import { selectItems } from "slices/basketSlice";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.stripe_public_key);
 
 function Checkout() {
   const basketItems = useSelector(selectItems);
   const totalPrice = useSelector(selectTotal);
   const Currency = price => <p>$ {price ? price : totalPrice}</p>;
   const { currentUser } = useAuth();
+
+  const createCheckoutSession = async () => {
+    const stripe = await stripePromise;
+
+    // call the backend to create a checkout session
+    const checkoutSession = await axios.post("/api/create-checkout-session", {
+      items: basketItems,
+      email: currentUser.email,
+    });
+
+    // redirect user to stripe checkout with the session id created above
+    const result = await stripe.redirectToCheckout({
+      sessionId: checkoutSession.data.id,
+    });
+
+    if (result.error) alert(result.error.message);
+  };
 
   return (
     <Layout>
@@ -45,6 +66,8 @@ function Checkout() {
             </h2>
 
             <button
+              role="link"
+              onClick={createCheckoutSession}
               disabled={!currentUser}
               className={`button mt-2 ${
                 !currentUser &&

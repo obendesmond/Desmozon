@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
+// const serviceAccount = require("../../permissions.json");
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBH8Yt2W8c_vkpA6Z9LY-_-EY9MCgS0fcw",
@@ -12,7 +14,7 @@ const firebaseConfig = {
   appId: "1:493475841093:web:e2721bb10bd0c359ae0f2c",
 };
 
-// Initialize Firebase
+// secure a connection to firebase admin
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore();

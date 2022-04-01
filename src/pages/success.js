@@ -9,8 +9,7 @@ function success() {
   const { currentUser } = useAuth();
 
   const handleGoToOrders = () => {
-    console.log("USER: ", currentUser);
-    router.push("/orders");
+    router.push(`/${currentUser.email}`);
   };
 
   return (

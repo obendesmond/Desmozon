@@ -23,6 +23,11 @@ function Header() {
 
   const handleSignOut = () => {
     signOut(auth).catch(err => alert(err.message));
+    router.push("/");
+  };
+
+  const handleGoToOrders = () => {
+    if (currentUser) router.push(`/${currentUser.email}`);
   };
 
   return (
@@ -64,7 +69,7 @@ function Header() {
             </p>
             <p className="font-extrabold md:text-sm">Account & Lists</p>
           </div>
-          <div className="link">
+          <div className="link" onClick={handleGoToOrders}>
             <p>Returns</p>
             <p className="font-extrabold md:text-sm">& Orders</p>
           </div>
@@ -86,7 +91,7 @@ function Header() {
       {/* bottom nav */}
       <div className="flex items-center space-x-3 p-2 pl-6 bg-amazon_blue-light text-white text-sm">
         <p onClick={() => router.push("/")} className="link flex items-center">
-          <MenuIcon className="h-6 mr-1" /> HOME
+          <MenuIcon className="h-6 mr-1" /> All
         </p>
         <p className="link">Prime Video</p>
         <p className="link">Amazon Business</p>
